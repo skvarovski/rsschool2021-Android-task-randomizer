@@ -1,5 +1,6 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,12 @@ class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
+    private var router: IFragmentRouter? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        router = activity as IFragmentRouter
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,13 +39,18 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
-            // TODO: implement back
+            val calculate = result.toString().toInt()
+            router?.openFirstFragment(calculate)
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
-        // TODO: generate random number
-        return 0
+        return (min..max).random()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        router = null
     }
 
     companion object {
@@ -47,9 +59,9 @@ class SecondFragment : Fragment() {
         fun newInstance(min: Int, max: Int): SecondFragment {
             val fragment = SecondFragment()
             val args = Bundle()
-
-            // TODO: implement adding arguments
-
+            args.putInt(MIN_VALUE_KEY, min)
+            args.putInt(MAX_VALUE_KEY, max)
+            fragment.arguments = args
             return fragment
         }
 
