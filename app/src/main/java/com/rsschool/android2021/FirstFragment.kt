@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import java.math.BigDecimal
 import kotlin.math.min
 
 class FirstFragment : Fragment() {
@@ -52,14 +53,13 @@ class FirstFragment : Fragment() {
 
             // проверки на "кривые" данные
             when {
-                min.isEmpty() -> {
-                    makeToast("Min Value is empty!")
-                }
-                max.isEmpty() -> {
-                    makeToast("Max value is empty!")
-                }
-
-
+                min.isEmpty() -> makeToast("Min Value is empty!")
+                max.isEmpty() -> makeToast("Max value is empty!")
+                BigDecimal(min) > BigDecimal(Int.MAX_VALUE) -> makeToast("Min so max value")
+                BigDecimal(max) > BigDecimal(Int.MAX_VALUE) -> makeToast("Max so max value")
+                min.toInt() > max.toInt() -> makeToast("MAX not max of MIN")
+                min.toInt() < 0 -> makeToast("Min so down of zero")
+                max.toInt() < 0 -> makeToast("Max so down of zero")
 
                 else -> {
                     router?.openSecondFragment(min.toInt(),max.toInt())
