@@ -21,6 +21,7 @@ class FirstFragment : Fragment() {
     private var toast: Toast? = null
     private var router: IFragmentRouter? = null
 
+    // Кастуем переменую
     override fun onAttach(context: Context) {
         super.onAttach(context)
         router = activity as IFragmentRouter
@@ -44,8 +45,8 @@ class FirstFragment : Fragment() {
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
+        // Реализуем действия при клике, с проверками
         generateButton?.setOnClickListener {
-            // TODO: send min and max to the SecondFragment
             val min = minValue?.text?.trim().toString()
             val max = maxValue?.text?.trim().toString()
 
@@ -58,14 +59,16 @@ class FirstFragment : Fragment() {
                     makeToast("Max value is empty!")
                 }
 
+
+
                 else -> {
                     router?.openSecondFragment(min.toInt(),max.toInt())
                 }
             }
-
         }
     }
 
+    // Вспомогательный метод для оповещения ошибок
     private fun makeToast(message: String) {
         toast?.cancel()
         toast = Toast.makeText(context, message, Toast.LENGTH_LONG)

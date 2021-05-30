@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements IFragmentRouter {
 
     @Override
@@ -21,15 +23,30 @@ public class MainActivity extends AppCompatActivity implements IFragmentRouter {
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, firstFragment);
         transaction.commit();
-        // TODO: invoke function which apply changes of the transaction
     }
 
     public void openSecondFragment(int min, int max) {
-        // TODO: implement it
         final Fragment secondFragment = SecondFragment.newInstance(min, max);
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction
                 .replace(R.id.container, secondFragment)
                 .commit();
+    }
+
+
+    // Переопределяем поведение хардверной кнопки "назад"
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        for (Fragment fragment : fragmentList) {
+            // если в стэке окажется фрагмент с реализацией интерфейса, то
+            // выполняем реализованый метод
+            if (fragment instanceof OnBackListener) {
+                ((OnBackListener) fragment).doBack();
+                return;
+            }
+        }
+        // в противном случае реализуем действие выхода
+        finish();
     }
 }
